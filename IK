@@ -1,0 +1,88 @@
+[12:20 PM, 9/9/2023] ikjames: from account import Account
+
+
+class Bank:
+
+    def _init_(self, bank:str):
+        self.__bank = bank
+        self.__lists_account = []
+
+    def can_register(self,first_name,second_name,pin):
+        fullname = first_name + " " + second_name
+        new_account = Account(self.generate_account_number(),fullname, pin)
+        self.__lists_account.append(new_account)
+
+
+    def generate_account_number(self):
+        return str(len(self.__lists_account) + 1)
+
+    def can_find_out(self, account_number):
+        for account in self.__lists_account:
+            if account.I_can_get_account_number() == account_number:
+                return account
+        else:
+            raise ValueError("wrong account")
+
+    def i_can_deposit(self,amount,account_number):
+        if amount > 0:
+            self.can_find_out(account_number).i_can_deposit(amount)
+
+
+
+    def check_balance(self,account_number, pin):
+        return self.can_find_out(account_number).check_balance(pin)
+
+    def can_withdraw(self,amount,account_number,pin):
+        if amount > 0:
+            self.can_find_out(account_number).i_can_withdraw(amount,pin)
+
+    def can_make_transfer(self,amount:int,from_account:str,to_account:str,pin:str) :
+        account_sender = self.can_find_out(str(from_account))
+        account_sender.i_can_withdraw(amount, pin)
+        account_reciever = self.can_find_out(str(to_account))
+        account_reciever.i_can_deposit(int(amount))
+[12:21 PM, 9/9/2023] ikjames: import unittest
+from bank import Bank
+from account import Account
+
+
+class BankTest(unittest.TestCase):
+
+    def setUp(self):
+        self.bank = Bank("UBA")
+
+
+    def test_i_can_register(self):
+        self.bank.can_register("ikenna","james","1234")
+        self.assertEqual(Account("1","ikenna james","1234").I_can_get_account(),self.bank.can_find_out("1").I_can_get_account())
+        self.bank.can_register("harry", "nwaogwugwu", "5454")
+        self.assertEqual(Account("2", "harry nwaogwugwu", "5454").I_can_get_account(),self.bank.can_find_out("2").I_can_get_account())
+
+    def test_i_can_deposit(self):
+        self.bank.can_register("ikenna", "james", "1234")
+        self.assertEqual(Account("1", "ikenna james", "1234").I_can_get_account(),self.bank.can_find_out("1").I_can_get_account())
+        self.bank.i_can_deposit(5000,"1")
+        self.assertEqual(5000,self.bank.check_balance("1","1234"))
+        self.bank.i_can_deposit(-5000, "1")
+        self.assertEqual(5000, self.bank.check_balance("1", "1234"))
+
+
+    def  test_i_can_withdraw(self):
+        self.bank.can_register("ikenna", "james", "1234")
+        self.assertEqual(Account("1", "ikenna james", "1234").I_can_get_account(),self.bank.can_find_out("1").I_can_get_account())
+        self.bank.i_can_deposit(100000, "1")
+        self.assertEqual(100000, self.bank.check_balance("1", "1234"))
+        self.bank.can_withdraw( 50000,"1", "1234")
+        self.assertEqual(50000, self.bank.check_balance("1", "1234"))
+
+
+    def test_i_can_transfer_from_account_to_transfer(self):
+        self.bank.can_register("ikenna", "james", "1234")
+        self.bank.can_register("harry", "nwaogwugwu", "5454")
+        self.assertEqual(Account("1", "ikenna james", "1234").I_can_get_account(),self.bank.can_find_out("1").I_can_get_account())
+        self.assertEqual(Account("2", "harry nwaogwugwu", "5454").I_can_get_account(),self.bank.can_find_out("2").I_can_get_account())
+        self.bank.i_can_deposit(10000, "1")
+        self.assertEqual(10000, self.bank.check_balance("1", "1234"))
+        self.bank.can_make_transfer(6000,"1","2","1234")
+        self.assertEqual(4000,self.bank.check_balance("1","1234"))
+        self.assertEqual(6000,self.bank.check_balance("2","5454")
