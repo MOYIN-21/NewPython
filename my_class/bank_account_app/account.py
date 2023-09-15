@@ -19,7 +19,6 @@ class Account:
 
     def withdraw(self, amount, pin) -> None:
         self.validate_amount(amount)
-        self.validate_amount_and_balance(amount)
         self.validate_pin(pin)
         self.__balance -= amount
 
@@ -42,4 +41,4 @@ class Account:
         return self.__account_number
 
     def get_account(self):
-        return self.__account_number + " " + self.__account_name + " " + self.__pin
+        return self.__account_number

@@ -9,8 +9,8 @@ class Bank:
         self.__list_account = []
 
     def register(self, first_name, last_name, pin):
-        full_name = first_name + " " + last_name
-        new_account = Account(self.generate_account_number(), full_name, pin)
+
+        new_account = Account(self.generate_account_number(), f"{first_name} {last_name}", pin)
         self.__list_account.append(new_account)
 
     def generate_account_number(self):
@@ -21,12 +21,11 @@ class Bank:
 
     def find_account(self, account_number) -> str:
         for account in self.__list_account:
-            if account.get_account_number() == account_number:
+            if account.account_number() == account_number:
                 return account
-        else:
-            raise AccountNotFoundException("ACCOUNT NOT FOUND")
+        raise AccountNotFoundException("ACCOUNT NOT FOUND")
 
-    def deposit(self, amount, account_number):
+    def deposit(self, account_number, amount):
         return self.find_account(account_number).deposit(amount)
 
     def check_balance(self, account_number, pin):
@@ -35,8 +34,6 @@ class Bank:
     def with_draw(self, account_number, amount, pin):
         return self.find_account(account_number).withdraw(amount, pin)
 
-    def transfer(self, amount: int, sender_account: str, receiver_account: str, pin: str):
-        account_sender = self.find_account(str(sender_account))
-        account_sender.withdraw(amount, pin)
-        account_receiver = self.find_account(str(receiver_account))
-        account_receiver.deposit(int(amount))
+    def transfer(self, sender_account: str, amount: int, receiver_account: str, pin: str):
+        self.find_account(sender_account).withdraw(amount, pin)
+        self.find_account(receiver_account).deposit(amount)

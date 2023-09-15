@@ -2,10 +2,6 @@ from Class_chinchin.exceptions import *
 from my_class.diary_app.entry import *
 
 
-def unlock_diary(password):
-    return password
-
-
 class Diary:
 
     def __init__(self, username: str, password: str):
@@ -15,14 +11,20 @@ class Diary:
         self.__password: str = password
         self.entry = 0
 
+    def unlock_diary(self, password: str):
+        if self.__password != password:
+            return WrongPinException
+        else:
+            return self.__is_locked == False
+
     def is_locked(self):
         return self.is_locked
 
     def lock_diary(self):
-        pass
+        self.__is_locked == True
 
-    def create_entry(self, id: int, title: str, body: str):
-        entry = Entry(id, title, body)
+    def create_entry( self, Id: str, title: str, body: str):
+        entry = Entry(Id, title, body)
         self.__list_of_entries.append(entry)
 
     def generateId(self):

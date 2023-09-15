@@ -12,20 +12,24 @@ class InvalidIdException:
 class TestDiaryFunction(unittest.TestCase):
 
     def setUp(self):
-        username = "Username"
-        password = "password"
-        self.diary = Diary(username, password)
+        # username = "Username"
+        # password = "password"
+        self.diary = Diary("userName", "0")
+        self.diary.lock_diary()
+        self.assertTrue(self.diary.is_locked())
 
     def test_that_diary_exist(self):
         self.assertTrue(self.diary)
 
+    def test_that_diary_is_unlocked(self):
+        self.diary.lock_diary()
+        self.assertTrue(self.diary.is_locked())
+        self.diary.unlock_diary("0")
+        self.assertFalse(self.diary.is_locked())
+
     def test_that_diary_is_locked(self):
         self.diary.lock_diary()
         self.assertTrue(self.diary.is_locked())
-
-    def test_that_diary_is_unlocked(self):
-        self.diary.lock_diary()
-        unlock_diary("1234")
 
     def test_that_entry_can_be_created(self):
         self.diary.create_entry(1, "school days", "are memories")
@@ -43,4 +47,4 @@ class TestDiaryFunction(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest()
+    unittest.TestCase
