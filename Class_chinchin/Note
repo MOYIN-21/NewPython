@@ -1,0 +1,286 @@
+DiaryRepoImPlTest
+package diaryTestPack;
+
+import data.model.Diary;
+import data.repository.DiaryRepositoryImpl;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class DiaryRepositoryImplTest {
+    DiaryRepositoryImpl diaryRepository;
+    @BeforeEach
+    public void setDiaryRepository() {
+        diaryRepository = new DiaryRepositoryImpl();
+    }
+
+    @Test
+    public void testThatDiaryExists() {
+        assertNotNull(diaryRepository);
+    }
+
+    @Test
+    public void testThatDiaryCanSave() {
+        Diary diary = new Diary();
+        diaryRepository.save(diary);
+
+        Diary diary1 = new Diary();
+        diaryRepository.save(diary1);
+
+        Diary diary2 = new Diary();
+        diary2.setId(3);
+        diaryRepository.saveNewDiary(diary2);
+
+        assertEquals(3, diaryRepository.count());
+    }
+    @Test
+    public void testThatDiaryCanDelete(){
+        Diary diary = new Diary();
+        diary.setUsername("Ogbuefi Ogumagala");
+        diaryRepository.save(diary);
+        assertEquals("Ogbuefi Ogumagala", diaryRepository.findById(1).getUsername());
+
+        Diary diary1 = new Diary();
+        diary1.setUsername("Ogumka Ogumaghala");
+        diaryRepository.save(diary1);
+        assertEquals("Ogumka Ogumaghala", diaryRepository.findById(2).getUsername());
+
+        diaryRepository.delete(diary);
+        assertEquals("Ogumka Ogumaghala", diaryRepository.findById(2).getUsername());
+        System.out.println(diaryRepository.findAll());
+
+    }
+    @Test
+    public void testThatDiaryCanSaveNewDiary(){
+        Diary diary = new Diary();
+        diary.setId(1);
+        diaryRepository.saveNewDiary(diary);
+
+        Diary diary1 = new Diary();
+        diary1.setId(2);
+        diaryRepository.saveNewDiary(diary1);
+
+        Diary diary2 = new Diary();
+        diary2.setId(3);
+        diaryRepository.saveNewDiary(diary2);
+        assertEquals(3, diaryRepository.count());
+    }
+
+    @Test
+    public void testThatDiaryCanUpdate(){
+        Diary diary = new Diary();
+        diary.setUsername("Ogbuefi Ogumagala");
+        diaryRepository.save(diary);
+        assertEquals("Ogbuefi Ogumagala", diaryRepository.findById(1).getUsername());
+
+        diaryRepository.updateDiary(diary);
+        diary.setUsername("Ogbuefi Ogumka");
+    //        Iterable<Diary> check = diaryRepository.findAll();
+        assertEquals("Ogbuefi Ogumka", diaryRepository.findById(1).getUsername());
+    }
+
+    @Test
+    public void testThatDiaryCanBeFoundById(){
+        Diary diary = new Diary();
+        diary.setUsername("Ogbuefi Ogumagala");
+        diaryRepository.save(diary);
+
+        Diary diary2 = new Diary();
+        diary.setUsername("Ogbuagu Adaobi");
+        diaryRepository.save(diary2);
+        assertEquals(2, diary.getDiaryId(), diary2.getDiaryId(), diaryRepository.findById(2).getUsername());
+    }
+    @Test
+    public void testThatDiaryCanBeCleared(){
+        Diary diary = new Diary();
+        diary.setUsername("Ogbuefi Ogumagala");
+        diary.setPassword("0090");
+        diaryRepository.save(diary);
+
+        Diary diary2 = new Diary();
+        diary.setPassword("0099");
+        diary.setUsername("Ogbuagu Adaobi");
+        diaryRepository.clear();
+        assertThrows(NullPointerException.class, ()-> diaryRepository.findById(5));
+
+//        assertNull(0,  diary.getDiaryId(), diary2.getDiaryId(), diaryRepository.findById(0).getUsername());
+    }
+    @Test
+    public void testThatDiaryCanFindAll(){
+        Diary diary = new Diary();
+        diary.setUsername("Ogbuefi Ogumagala");
+        diary.setPassword("0090");
+        diaryRepository.save(diary);
+
+        Diary diary2 = new Diary();
+        diary.setPassword("0099");
+        diary.setUsername("Ogbuagu Adaobi");
+        diaryRepository.save(diary2);
+        Iterable<Diary> diaries = diaryRepository.findAll();
+    }
+    }
+    ***********************************************
+    Under Model
+    Diary
+
+
+
+
+
+
+
+
+
+
+
+
+
+    DAIRYREpoIMPL
+
+    package data.repository;
+
+import data.model.Diary;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class DiaryRepositoryImpl implements DiaryRepository{
+    private int ID;
+    private String username;
+    private String password;
+    private boolean isLocked;
+    private int count;
+    List<Diary> diaries = new ArrayList<>();
+
+    @Override
+    public Diary save(Diary diary) {
+        boolean diaryDoesNotExist = diary.getDiaryId() == 0 || findById(diary.getDiaryId()) == null;
+        if (diaryDoesNotExist) saveNewDiary(diary);
+
+        else {
+            updateDiary(diary);
+        }
+        return diary;
+    }
+
+    public void saveNewDiary(Diary diary) {
+        diary.setId(generateId());
+        diaries.add(diary);
+    }
+
+    public int  generateId() {
+        return diaries.size() + 1;
+    }
+
+    public void updateDiary(Diary diary) {
+        Diary newDiary = findById(diary.getDiaryId());
+        newDiary.setUsername(diary.getUsername());
+    }
+
+    @Override
+    public void delete(Diary diary) {
+        Diary diary1 = findById(diary.getDiaryId());
+        diaries.remove(diary1);
+    }
+
+    @Override
+    public long count() {
+        return diaries.size();
+    }
+
+    @Override
+    public Diary findById(int id) {
+        for (Diary diary : diaries) {
+            if (diary.getDiaryId() == id) {
+                return diary;
+            }
+        }
+        throw new NullPointerException("Invalid ID");
+    }
+
+    @Override
+    public Iterable<Diary> findAll() {
+        return diaries;
+    }
+
+    @Override
+    public void clear() {
+        diaries.clear();
+    }
+
+    @Override
+    public String getDiaryUsername() {
+        return username;
+    }
+}
+
+ENTRYREPOIMPLEN
+package data.repository;
+
+import data.model.Diary;
+import data.model.Entry;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class EntryRepositoryImpl implements EntryRepository{
+    List<Entry> entries = new ArrayList<>();
+
+    public Entry createEntry(Entry entry) {
+        boolean diaryDoesNotExist = entry.getEntryId() == 0 || findEntryById(entry.getEntryId()) == null;
+        if (diaryDoesNotExist) saveNewEntry(entry);
+
+        else {
+            updateEntry(entry);
+        }
+        return entry;
+    }
+
+    public void updateEntry(Entry entry) {
+        Entry newEntry = findEntryById(entry.getEntryId());
+        newEntry.setTitle(entry.getTitle());
+        newEntry.setBody(entry.getBody());
+
+    }
+
+    public void saveNewEntry(Entry entry) {
+        entry.setId(generateId());
+        entries.add(entry);
+    }
+
+    public int generateId() {
+        return entries.size() + 1;
+    }
+    @Override
+    public void delete(Entry entry) {
+        Entry entry1 = findEntryById(entry.getEntryId());
+        entries.remove(entry1);
+    }
+
+    @Override
+    public long count() {
+        return entries.size();
+    }
+
+    @Override
+    public Entry findEntryById(int entryId) {
+        for (Entry entry : entries) {
+            if (entry.getEntryId() == entryId) {
+                return entry;
+            }
+        }
+        throw new NullPointerException("Invalid ID");
+//        return null;
+    }
+
+    @Override
+    public Iterable<Entry> findAll () {
+        return entries;
+    }
+
+    @Override
+    public void clear () {
+        entries.clear();
+    }
+}
