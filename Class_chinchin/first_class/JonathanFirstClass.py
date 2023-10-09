@@ -6,4 +6,4 @@ def number(numbers):
 
 
 if __name__ == "__main__":
-    print(number())                                                                                                                                                                                                                                                                                                                                                                 ))
+    print(number(4))                                                                                                                                                                                                                                                                                                                                                                 ))

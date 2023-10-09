@@ -71,7 +71,7 @@ def save_file():
 def go_to_main_menu():
     mainMenu = int(input("""
                     ===================================
-                    So good to be here, How are you today?
+                    WELCOME TO EAGLE'S PHONEBOOK! HERE ARE WHAT YOU CAN DO?
                     1 -> Create Contact
                     2 -> View Contact
                     3 -> Edit Contact

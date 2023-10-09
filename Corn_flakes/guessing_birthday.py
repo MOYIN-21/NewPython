@@ -5,6 +5,7 @@ set1 = ("""
             17 19 21 23
             25 27 29 31 """)
 
+
 def set2():
     print("Is your birthday in set1?\n")
     print(""" 
@@ -12,6 +13,7 @@ def set2():
                     10 11 14 15
                     16 19 22 23
                     18 26 27 30 31""")
+
 
 def set3():
     print("Is your birthday in set1?\n")
@@ -67,5 +69,6 @@ def set5():
 
 def response():
     print("\nEnter 0 for No and 1 for yes: ")
+
 
 print(set1())
