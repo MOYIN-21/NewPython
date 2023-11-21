@@ -173,7 +173,6 @@ class MainDiary:
     def create_entry(self):
         self.title = input("Create title: ")
         self.body = input("Write body: ")
-
         if not self.title or not self.body:
             raise (ValueError, KeyboardInterrupt, "Title or body must be entered")
 
@@ -205,34 +204,6 @@ class MainDiary:
         name = f"Hello {self.username}, your account has been created successfully. You are welcome to use your diary."
         print(name)
         self.diary_menu()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

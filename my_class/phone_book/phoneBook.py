@@ -1,6 +1,4 @@
 from my_class.phone_book.contact import contact
-
-
 class phonebook:
 
     def __init__(self):
